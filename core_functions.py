@@ -2,18 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import gpplot as gpp
-import csv, warnings, math
 import anchors
-import core_functions as fns
 from poola import core as pool
-from scipy.stats import ttest_ind
-from scipy.interpolate import CubicSpline
-from statsmodels.distributions.empirical_distribution import ECDF
 from sklearn.metrics import auc
-from sklearn.metrics import precision_recall_curve, average_precision_score
-import statsmodels
-from scipy import stats
 
 ## Reformatting functions 
 ##
@@ -43,8 +34,7 @@ def clean_Sanjana_data(df, guide_col='Guide', library = False):
     df_clean['Guide#'] = pd.Series(guide_list)
     df_clean['Guide'] = df_clean[['Library','Guide#']].apply(lambda x: '_'.join(x.dropna().values), axis=1)
     df_clean['Gene Symbol'] = pd.Series(gene_list)
-    #df_clean['Reads'] = df.iloc[:,1].copy()
-    #if not library:
+
     df_clean = df_clean.drop(['Library', 'Guide#','old_Guide'], axis = 1)
     
     # Reorder columns so Guide, Gene Symbol then data columns
@@ -216,9 +206,6 @@ def pair_cols(df, initial_id, res_id, sep = '_', col_type = 'lfc'): #if more tha
             pair = []
             if initial_id in col: #find corresponding resistant pop
                 pair.append(col)
-                split_col = col.split(sep)
-                ini_index = split_col.index(initial_id)
-                res_col_string = ' '.join(split_col[:ini_index])
                 res_pop = [col for col in cols if res_id in col]
 
                 for col in res_pop:
@@ -234,7 +221,7 @@ def pair_cols(df, initial_id, res_id, sep = '_', col_type = 'lfc'): #if more tha
         pairs.append(cols)
         return sharex, pairs
 
-def lfc_dist_plot(chip_lfc, initial_id=None, res_id=None, paired_cols=None, filename = '', figsize = (6,4)): #kde plots of population distribution (initial, resistant)
+def lfc_dist_plot(chip_lfc, initial_id=None, res_id=None, paired_cols=None, col_sep = '_', filename = '', figsize = (6,4)): #kde plots of population distribution (initial, resistant)
     '''
     Inputs: 
         1. chip_lfc: Dataframe containing log-fold change values and gene symbols 
@@ -249,7 +236,7 @@ def lfc_dist_plot(chip_lfc, initial_id=None, res_id=None, paired_cols=None, file
     Outputs: kde plots of population distribution (initial, resistant)
     '''
     if not paired_cols:    
-        sharex, lfc_pairs = pair_cols(chip_lfc, initial_id = initial_id, res_id = res_id)
+        sharex, lfc_pairs = pair_cols(chip_lfc, initial_id = initial_id, res_id = res_id, sep = col_sep)
     else:
         sharex, lfc_pairs = paired_cols
         
@@ -343,8 +330,7 @@ def run_guide_residuals(lfc_df, initial_id, res_id):
     '''
     lfc_df = lfc_df.drop_duplicates()
     paired_lfc_cols = pair_cols(lfc_df, initial_id, res_id)[1] #get lfc pairs 
-    modified = []
-    unperturbed = []
+
     #reference_df: column1 = modifier condition, column2 = unperturbed column
     ref_df = pd.DataFrame(columns=['modified', 'unperturbed'])
     row = 0 #row index for reference df 
