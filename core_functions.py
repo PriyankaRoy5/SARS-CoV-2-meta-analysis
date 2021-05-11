@@ -268,14 +268,10 @@ def lfc_dist_plot(chip_lfc, initial_id=None, res_id=None, paired_cols=None, col_
                 ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         i+=1
         sns.despine()   
-    filepath = '../../Figures/' + filename + '_popdist.png'
-    
-    print(filepath)
-    fig.savefig(filepath, bbox_inches = 'tight')
     
     
 #Control distributions
-def control_dist_plot(chip_lfc, control_name, initial_id, res_id, filename, figsize = (6,4)): 
+def control_dist_plot(chip_lfc, control_name, filename, gene_col = 'Gene Symbol', initial_id=None, res_id=None, paired_cols=None, col_sep = '_', figsize = (6,4)): 
     '''
     Inputs: 
     1. chip_lfc: annotated lfc data frame
@@ -287,7 +283,10 @@ def control_dist_plot(chip_lfc, control_name, initial_id, res_id, filename, figs
     Outputs: kde plots of control distributions (initial, resistant)
     
     '''
-    sharex, lfc_pairs = pair_cols(chip_lfc, initial_id= initial_id, res_id=res_id)
+    if not paired_cols:    
+        sharex, lfc_pairs = pair_cols(chip_lfc, initial_id = initial_id, res_id = res_id, sep = col_sep)
+    else:
+        sharex, lfc_pairs = paired_cols
     controls = get_controls(chip_lfc, control_name)
     nrows = len(lfc_pairs)
     
@@ -313,10 +312,6 @@ def control_dist_plot(chip_lfc, control_name, initial_id, res_id, filename, figs
         i+=1 #switch to next subplot for next screen
 
         sns.despine()
-
-    filepath = '../../Figures/' + filename + '_controldist.png'
-    print(filepath)
-    fig.savefig(filepath, bbox_inches = 'tight')
     
         
 ## Residual functions 
