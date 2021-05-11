@@ -268,10 +268,6 @@ def lfc_dist_plot(chip_lfc, initial_id=None, res_id=None, paired_cols=None, col_
                 ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         i+=1
         sns.despine()   
-    filepath = '../../Figures/' + filename + '_popdist.png'
-    
-    print(filepath)
-    fig.savefig(filepath, bbox_inches = 'tight')
     
     
 #Control distributions
@@ -316,10 +312,6 @@ def control_dist_plot(chip_lfc, control_name, filename, gene_col = 'Gene Symbol'
         i+=1 #switch to next subplot for next screen
 
         sns.despine()
-
-    #filepath = '../../Figures/' + filename + '_controldist.png'
-    #print(filepath)
-    #fig.savefig(filepath, bbox_inches = 'tight')
     
         
 ## Residual functions 
