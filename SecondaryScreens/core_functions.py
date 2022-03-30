@@ -141,10 +141,10 @@ def get_gene_sets():
     '''
     Outputs: essential and non-essential genes as defined by Hart et al. 
     '''
-    ess_genes = pd.read_csv('../../../Data/External/Gene_sets_Hart/essential-genes.txt', sep='\t', header=None)
+    ess_genes = pd.read_csv('https://raw.githubusercontent.com/gpp-rnd/genesets/master/human/essential-genes-Hart2015.txt', sep='\t', header=None)
     ess_genes.columns = ['Gene Symbol']
     ess_genes['ess-val'] = [1]*len(ess_genes)
-    non_ess = pd.read_csv('../../../Data/External/Gene_sets_Hart/non-essential-genes.txt', sep='\t', header=None)
+    non_ess = pd.read_csv('https://raw.githubusercontent.com/gpp-rnd/genesets/master/human/non-essential-genes-Hart2014.txt', sep='\t', header=None)
     non_ess.columns = ['Gene Symbol']
     non_ess['non-ess-val'] = [1]*len(non_ess)
     return ess_genes, non_ess
